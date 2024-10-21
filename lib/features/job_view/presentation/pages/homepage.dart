@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jobs_it/app/theme/app_colors.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/applied_page.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/home_initial_page.dart';
-import 'package:jobs_it/features/job_view/presentation/pages/profile_page.dart';
+import 'package:jobs_it/features/authentication/presentation/pages/profile_page.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/saved_page.dart';
 
 class Homepage extends StatefulWidget {

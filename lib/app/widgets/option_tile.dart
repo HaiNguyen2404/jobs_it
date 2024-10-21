@@ -4,8 +4,13 @@ import 'package:jobs_it/app/theme/app_styles.dart';
 
 class OptionTile extends StatelessWidget {
   final Color? color;
+  final String? content;
 
-  const OptionTile({super.key, this.color});
+  const OptionTile({
+    super.key,
+    this.color,
+    this.content,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +21,8 @@ class OptionTile extends StatelessWidget {
         color: color ?? AppColors.background,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Text(
-        'Option',
+      child: Text(
+        content ?? 'Option',
         style: AppStyles.bodySmall11,
       ),
     );

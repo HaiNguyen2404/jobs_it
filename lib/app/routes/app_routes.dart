@@ -5,8 +5,6 @@ import 'package:jobs_it/features/job_view/presentation/pages/applied_page.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/change_password_page.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/home_initial_page.dart';
 import 'package:jobs_it/features/job_view/presentation/pages/homepage.dart';
-import 'package:jobs_it/features/job_view/presentation/pages/job_info_edit_page.dart';
-import 'package:jobs_it/features/job_view/presentation/pages/personal_info_edit_page.dart';
 
 class AppRoutes {
   static const String homePage = '/home_page';
@@ -23,8 +21,6 @@ class AppRoutes {
     homePage: (context) => const Homepage(),
     homeInitialPage: (context) => const HomeInitialPage(),
     appliedPage: (context) => const AppliedPage(),
-    personalInfoEditPage: (context) => PersonalInfoEditPage(),
-    jobInfoEditPage: (context) => JobInfoEditPage(),
     signInPage: (context) => const SignInPage(),
     registerPage: (context) => RegisterPage(),
     changePasswordPage: (context) => ChangePasswordPage(),

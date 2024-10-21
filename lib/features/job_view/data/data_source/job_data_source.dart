@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:jobs_it/app/network/dio_client.dart';
 import 'package:jobs_it/features/job_view/data/models/job_model.dart';
 
+import '../../../../app/constants/api_urls.dart';
+
 abstract class JobDataSource {
   Future<List<JobModel>> getJobs();
   Future<void> saveJob(JobModel job);
@@ -17,7 +19,7 @@ class JobDataSourceImpl implements JobDataSource {
   Future<List<JobModel>> getJobs() async {
     try {
       final response = await dioClient.get(
-        'https://665086abec9b4a4a603267eb.mockapi.io/jobsit/job',
+        ApiUrls.mockURL,
         options: Options(responseType: ResponseType.json),
       );
 
@@ -36,7 +38,7 @@ class JobDataSourceImpl implements JobDataSource {
     bool savedJob = !(job.isSaved);
 
     await dioClient.patch(
-      'https://665086abec9b4a4a603267eb.mockapi.io/jobsit/job/${job.id}',
+      '${ApiUrls.mockURL}/${job.id}',
       data: {'isSaved': savedJob},
     );
   }
@@ -46,7 +48,7 @@ class JobDataSourceImpl implements JobDataSource {
     bool appliedJob = !(job.isApplied);
 
     await dioClient.patch(
-      'https://665086abec9b4a4a603267eb.mockapi.io/jobsit/job/${job.id}',
+      '${ApiUrls.mockURL}/${job.id}',
       data: {'isApplied': appliedJob},
     );
   }

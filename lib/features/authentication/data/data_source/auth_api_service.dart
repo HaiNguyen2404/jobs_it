@@ -12,6 +12,7 @@ abstract class AuthApiService {
   Future<Either> register(RegisterRequest request);
   Future<Either> signIn(SignInRequest request);
   Future<UserModel?> getUser();
+  Future<void> updateUser(UserModel user);
 }
 
 class AuthApiServiceImpl implements AuthApiService {
@@ -55,9 +56,6 @@ class AuthApiServiceImpl implements AuthApiService {
 
     final response = await locator<DioClient>().get(
       ApiUrls.authMe,
-      options: Options(
-        headers: {'Authorization': 'Bearer $token'},
-      ),
     );
 
     if (response.statusCode != 200) {
@@ -66,10 +64,14 @@ class AuthApiServiceImpl implements AuthApiService {
 
     final data = response.data;
 
-    return UserModel(
-      name: data['name'],
-      username: data['username'],
-      token: token,
+    return UserModel.fromJson(data);
+  }
+
+  @override
+  Future<void> updateUser(UserModel user) async {
+    await locator<DioClient>().patch(
+      ApiUrls.authMe,
+      data: user.toJson(),
     );
   }
 }
