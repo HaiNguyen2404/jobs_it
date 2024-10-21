@@ -7,8 +7,8 @@ import 'package:jobs_it/features/job_view/domain/entities/default_filter.dart';
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/widgets/custom_button.dart';
 import '../../../../app/widgets/custom_text_form_field.dart';
-import '../../../authentication/domain/entities/user.dart';
-import '../../../authentication/presentation/bloc/button_cubit.dart';
+import '../../domain/entities/user.dart';
+import '../bloc/button_cubit.dart';
 
 class JobInfoEditPage extends StatefulWidget {
   final User user;

@@ -8,8 +8,8 @@ import 'package:jobs_it/app/widgets/custom_outline_button.dart';
 import 'package:jobs_it/app/widgets/custom_switch.dart';
 import 'package:jobs_it/app/widgets/option_tile.dart';
 import 'package:jobs_it/features/authentication/presentation/bloc/button_cubit.dart';
-import 'package:jobs_it/features/job_view/presentation/pages/job_info_edit_page.dart';
-import 'package:jobs_it/features/job_view/presentation/pages/personal_info_edit_page.dart';
+import 'package:jobs_it/features/authentication/presentation/pages/job_info_edit_page.dart';
+import 'package:jobs_it/features/authentication/presentation/pages/personal_info_edit_page.dart';
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/widgets/circle_display.dart';
 

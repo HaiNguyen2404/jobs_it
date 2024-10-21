@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jobs_it/app/di/service_locator.dart';
 import 'package:jobs_it/app/widgets/custom_avatar.dart';
 import 'package:jobs_it/app/widgets/custom_button.dart';
 import 'package:jobs_it/app/widgets/custom_dropdown.dart';
