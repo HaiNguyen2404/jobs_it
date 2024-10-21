@@ -4,6 +4,7 @@ import 'package:jobs_it/features/authentication/data/data_source/hive_credential
 import 'package:jobs_it/features/authentication/data/models/credentials.dart';
 import 'package:jobs_it/features/authentication/data/models/sign_in_request.dart';
 import 'package:jobs_it/features/authentication/data/models/user_model.dart';
+import 'package:jobs_it/features/authentication/domain/entities/user.dart';
 import 'package:jobs_it/features/authentication/domain/repository/auth_repository.dart';
 
 import '../models/register_request.dart';
@@ -49,5 +50,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> deleteCredentials() async {
     await storage.deleteCredentials();
+  }
+
+  @override
+  Future<void> updateUser(User user) async {
+    await apiService.updateUser(UserModel.fromEntity(user));
   }
 }

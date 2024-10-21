@@ -12,4 +12,6 @@ abstract class AuthRepository {
   Future<void> saveCredentials(Credentials credentials);
   Future<Credentials?> getCredentials();
   Future<void> deleteCredentials();
+
+  Future<void> updateUser(User user);
 }

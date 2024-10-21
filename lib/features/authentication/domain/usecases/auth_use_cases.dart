@@ -38,3 +38,14 @@ class GetUserUseCase implements Usecase<User?, void> {
     return authRepository.getUser();
   }
 }
+
+class UpdateUserUseCase implements Usecase<void, User> {
+  final AuthRepository authRepository;
+
+  UpdateUserUseCase(this.authRepository);
+
+  @override
+  Future<void> call({User? param}) async {
+    await authRepository.updateUser(param!);
+  }
+}

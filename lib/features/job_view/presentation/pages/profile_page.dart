@@ -8,6 +8,8 @@ import 'package:jobs_it/app/widgets/custom_outline_button.dart';
 import 'package:jobs_it/app/widgets/custom_switch.dart';
 import 'package:jobs_it/app/widgets/option_tile.dart';
 import 'package:jobs_it/features/authentication/presentation/bloc/button_cubit.dart';
+import 'package:jobs_it/features/job_view/presentation/pages/job_info_edit_page.dart';
+import 'package:jobs_it/features/job_view/presentation/pages/personal_info_edit_page.dart';
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/widgets/circle_display.dart';
 
@@ -57,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     builder: (context, state) {
                       if (state is ButtonSuccessState) {
                         return Text(
-                          state.user.name,
+                          '${state.user.firstName} ${state.user.lastName}',
                           style: AppStyles.titleLarge,
                         );
                       } else if (state is ButtonFailureState) {
@@ -227,15 +229,26 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Personal Information',
                   style: AppStyles.bodyMediumBold14,
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.personalInfoEditPage);
+                BlocBuilder<ButtonCubit, ButtonState>(
+                  builder: (context, state) {
+                    return IconButton(
+                      onPressed: state is ButtonSuccessState
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PersonalInfoEditPage(
+                                    user: state.user,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {},
+                      icon: const Icon(
+                        Icons.edit_square,
+                        color: AppColors.primary,
+                      ),
+                    );
                   },
-                  icon: const Icon(
-                    Icons.edit_square,
-                    color: AppColors.primary,
-                  ),
                 ),
               ],
             ),
@@ -251,58 +264,66 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.mail_outline,
-                    content: "example@gmail.com",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.phone_in_talk_outlined,
-                    content: "037 256 2102",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.location_on_outlined,
-                    content: "Ho Chi Minh city",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.home_outlined,
-                    content: "University of Information Technology",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.calendar_month_outlined,
-                    content: "24/05/2003",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildInfoRow(
-                    icon: Icons.person_outline,
-                    content: "Male",
-                  ),
-                ),
-              ],
+            child: BlocBuilder<ButtonCubit, ButtonState>(
+              builder: (context, state) {
+                if (state is ButtonSuccessState) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.mail_outline,
+                          content: state.user.email,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.phone_in_talk_outlined,
+                          content: state.user.phone ?? 'Unset',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.location_on_outlined,
+                          content: state.user.location ?? 'Unset',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.home_outlined,
+                          content: state.user.university ?? 'Unset',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.calendar_month_outlined,
+                          content: "24/05/2003",
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: _buildInfoRow(
+                          icon: Icons.person_outline,
+                          content: state.user.gender ?? 'Unset',
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox(height: 50);
+                }
+              },
             ),
           ),
         ],
@@ -326,27 +347,43 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildJobInfoRow() {
-    return Container(
-      width: double.maxFinite,
-      margin: const EdgeInsets.only(left: 12, right: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'Job Information',
-            style: AppStyles.bodyMediumBold14,
+    return BlocBuilder<ButtonCubit, ButtonState>(
+      builder: (context, state) {
+        return Container(
+          width: double.maxFinite,
+          margin: const EdgeInsets.only(left: 12, right: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Job Information',
+                style: AppStyles.bodyMediumBold14,
+              ),
+              BlocBuilder<ButtonCubit, ButtonState>(
+                builder: (context, state) {
+                  return IconButton(
+                    onPressed: state is ButtonSuccessState
+                        ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => JobInfoEditPage(
+                                  user: state.user,
+                                ),
+                              ),
+                            );
+                          }
+                        : () {},
+                    icon: const Icon(
+                      Icons.edit_square,
+                      color: AppColors.primary,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.jobInfoEditPage);
-            },
-            icon: const Icon(
-              Icons.edit_square,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -359,97 +396,105 @@ class _ProfilePageState extends State<ProfilePage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Job wanted",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              'Something',
-              style: AppStyles.bodyMedium14,
-            ),
-          ),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Position",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const OptionTile(),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Major",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const OptionTile(),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Job type",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const OptionTile(),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Job location",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            width: double.maxFinite,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            child: _buildInfoRow(
-              icon: Icons.location_on_outlined,
-              content: "Ho Chi Minh city",
-            ),
-          ),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "CV",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          _buildCVPlaceHolder(),
-          const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text(
-              "Cover letter",
-              style: AppStyles.bodyMediumBold14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Text('Write a brief introduction about yourself'),
-          ),
-          const SizedBox(height: 4),
-        ],
+      child: BlocBuilder<ButtonCubit, ButtonState>(
+        builder: (context, state) {
+          if (state is ButtonSuccessState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    'Job Wanted',
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    state.user.jobWanted!,
+                    style: AppStyles.bodyMedium14,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "Position",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                OptionTile(content: state.user.position),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "Major",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                OptionTile(content: state.user.major),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "Job type",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                OptionTile(content: state.user.jobType),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "Job location",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.maxFinite,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  child: _buildInfoRow(
+                    icon: Icons.location_on_outlined,
+                    content: state.user.jobLocation!,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "CV",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                _buildCVPlaceHolder(),
+                const SizedBox(height: 14),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    "Cover letter",
+                    style: AppStyles.bodyMediumBold14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text('Write a brief introduction about yourself'),
+                ),
+                const SizedBox(height: 4),
+              ],
+            );
+          } else {
+            return const SizedBox(height: 20);
+          }
+        },
       ),
     );
   }

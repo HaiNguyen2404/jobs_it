@@ -1,19 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobs_it/app/theme/app_colors.dart';
 import 'package:jobs_it/app/widgets/custom_dropdown.dart';
+import 'package:jobs_it/features/job_view/domain/entities/default_filter.dart';
 
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/widgets/custom_button.dart';
 import '../../../../app/widgets/custom_text_form_field.dart';
+import '../../../authentication/domain/entities/user.dart';
+import '../../../authentication/presentation/bloc/button_cubit.dart';
 
-class JobInfoEditPage extends StatelessWidget {
+class JobInfoEditPage extends StatefulWidget {
+  final User user;
+
+  const JobInfoEditPage({
+    super.key,
+    required this.user,
+  });
+
+  @override
+  State<JobInfoEditPage> createState() => _JobInfoEditPageState();
+}
+
+class _JobInfoEditPageState extends State<JobInfoEditPage> {
   final TextEditingController jobWantedController = TextEditingController();
 
   final List<String> dropDownList = ['Option 1', 'Option 2', 'Option 3'];
 
   final TextEditingController coverLetterController = TextEditingController();
 
-  JobInfoEditPage({super.key});
+  late String positionDropdownValue;
+  late String majorDropdownValue;
+  late String jobTypeDropdownValue;
+  late String jobLocationDropdownValue;
+
+  @override
+  void initState() {
+    super.initState();
+    jobWantedController.text = widget.user.jobWanted ?? '';
+    positionDropdownValue = widget.user.position!;
+    majorDropdownValue = widget.user.major!;
+    jobTypeDropdownValue = widget.user.jobType!;
+    jobLocationDropdownValue = widget.user.jobLocation!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +70,13 @@ class JobInfoEditPage extends StatelessWidget {
                 children: [
                   _buildTextFieldSection('Job wanted', jobWantedController),
                   const SizedBox(height: 14),
-                  _buildDropDownSection('Position'),
+                  _buildPositionSection('Position', DefaultFilter.jobPosition),
                   const SizedBox(height: 14),
-                  _buildDropDownSection('Major'),
+                  _buildMajorSection('Major', DefaultFilter.major),
                   const SizedBox(height: 14),
-                  _buildDropDownSection('Job type'),
+                  _buildJobTypeSection('Job type', DefaultFilter.jobType),
                   const SizedBox(height: 14),
-                  _buildNoOptionDropDown('Location'),
+                  _buildJobLocationSection('Location', DefaultFilter.locations),
                   const SizedBox(height: 14),
                   _buildCVSection(),
                   const SizedBox(height: 14),
@@ -81,90 +110,6 @@ class JobInfoEditPage extends StatelessWidget {
           CustomTextFormField(
             controller: controller,
             hintText: content,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDropDownSection(String content) {
-    return Container(
-      width: double.maxFinite,
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            content,
-            style: AppStyles.bodyMediumBold14,
-          ),
-          const SizedBox(height: 10),
-          Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              CustomDropdown(
-                icon: Container(
-                  margin: const EdgeInsets.only(left: 16),
-                  child: const Icon(Icons.arrow_drop_down),
-                ),
-                hintText: '',
-                iconSize: 20,
-                items: dropDownList,
-              ),
-              Container(
-                width: 76,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Option',
-                      style: AppStyles.bodySmall11,
-                    ),
-                    SizedBox(
-                      height: 10,
-                      width: 20,
-                      child: Icon(
-                        Icons.clear,
-                        size: 20,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoOptionDropDown(String content) {
-    return Container(
-      width: double.maxFinite,
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            content,
-            style: AppStyles.bodyMediumBold14,
-          ),
-          const SizedBox(height: 10),
-          CustomDropdown(
-            icon: Container(
-              margin: const EdgeInsets.only(left: 16),
-              child: const Icon(Icons.arrow_drop_down),
-            ),
-            hintText: content,
-            iconSize: 20,
-            items: dropDownList,
           ),
         ],
       ),
@@ -236,7 +181,158 @@ class JobInfoEditPage extends StatelessWidget {
       ),
       child: CustomButton(
         text: 'Save',
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          User editedUser = User(
+            id: widget.user.id,
+            firstName: widget.user.firstName,
+            lastName: widget.user.lastName,
+            email: widget.user.email,
+            birthday: widget.user.birthday,
+            phone: widget.user.phone,
+            gender: widget.user.gender,
+            location: widget.user.location,
+            university: widget.user.university,
+            jobWanted: jobWantedController.text,
+            position: positionDropdownValue,
+            jobType: jobTypeDropdownValue,
+            major: majorDropdownValue,
+            jobLocation: jobLocationDropdownValue,
+          );
+          context.read<ButtonCubit>().updateUser(editedUser);
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
+  Widget _buildPositionSection(
+    String content,
+    List<String> optionsList,
+  ) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            style: AppStyles.bodyMediumBold14,
+          ),
+          const SizedBox(height: 10),
+          CustomDropdown(
+            icon: Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: const Icon(Icons.arrow_drop_down),
+            ),
+            onChanged: (value) {
+              positionDropdownValue = value;
+            },
+            hintText: content,
+            iconSize: 20,
+            items: optionsList,
+            currentValue: positionDropdownValue,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMajorSection(
+    String content,
+    List<String> optionsList,
+  ) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            style: AppStyles.bodyMediumBold14,
+          ),
+          const SizedBox(height: 10),
+          CustomDropdown(
+            icon: Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: const Icon(Icons.arrow_drop_down),
+            ),
+            onChanged: (value) {
+              majorDropdownValue = value;
+            },
+            hintText: content,
+            iconSize: 20,
+            items: optionsList,
+            currentValue: majorDropdownValue,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJobTypeSection(
+    String content,
+    List<String> optionsList,
+  ) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            style: AppStyles.bodyMediumBold14,
+          ),
+          const SizedBox(height: 10),
+          CustomDropdown(
+            icon: Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: const Icon(Icons.arrow_drop_down),
+            ),
+            onChanged: (value) {
+              jobTypeDropdownValue = value;
+            },
+            hintText: content,
+            iconSize: 20,
+            items: optionsList,
+            currentValue: jobTypeDropdownValue,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJobLocationSection(
+    String content,
+    List<String> optionsList,
+  ) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            style: AppStyles.bodyMediumBold14,
+          ),
+          const SizedBox(height: 10),
+          CustomDropdown(
+            icon: Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: const Icon(Icons.arrow_drop_down),
+            ),
+            onChanged: (value) {
+              jobLocationDropdownValue = value;
+            },
+            hintText: content,
+            iconSize: 20,
+            items: optionsList,
+            currentValue: jobLocationDropdownValue,
+          ),
+        ],
       ),
     );
   }

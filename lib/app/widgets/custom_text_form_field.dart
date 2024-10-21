@@ -10,6 +10,8 @@ class CustomTextFormField extends StatelessWidget {
   final bool? obscureText;
   final Iterable<String>? autofillHints;
   final FocusNode? focusNode;
+  final bool? readOnly;
+  final void Function()? onTap;
 
   const CustomTextFormField({
     super.key,
@@ -21,6 +23,8 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText,
     this.autofillHints,
     this.focusNode,
+    this.readOnly,
+    this.onTap,
   });
 
   @override
@@ -33,6 +37,8 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText ?? false,
       autofillHints: autofillHints,
       focusNode: focusNode,
+      readOnly: readOnly ?? false,
+      onTap: onTap,
     );
   }
 

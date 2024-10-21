@@ -16,6 +16,7 @@ class ButtonCubit extends Cubit<ButtonState> {
   final SaveCredentialsUseCase saveCredentialsUseCase;
   final GetCredentialsUseCase getCredentialsUseCase;
   final DeleteCredentialsUseCase deleteCredentialsUseCase;
+  final UpdateUserUseCase updateUserUseCase;
 
   ButtonCubit(
     this.registerUseCase,
@@ -24,6 +25,7 @@ class ButtonCubit extends Cubit<ButtonState> {
     this.saveCredentialsUseCase,
     this.getCredentialsUseCase,
     this.deleteCredentialsUseCase,
+    this.updateUserUseCase,
   ) : super(ButtonInitialState());
 
   register(RegisterRequest param) async {
@@ -76,5 +78,10 @@ class ButtonCubit extends Cubit<ButtonState> {
 
   deleteCredentials() async {
     await deleteCredentialsUseCase.call();
+  }
+
+  updateUser(User user) async {
+    await updateUserUseCase.call(param: user);
+    getUser();
   }
 }

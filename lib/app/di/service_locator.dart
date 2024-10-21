@@ -27,6 +27,7 @@ void initServiceLocator() {
         locator<SaveCredentialsUseCase>(),
         locator<GetCredentialsUseCase>(),
         locator<DeleteCredentialsUseCase>(),
+        locator<UpdateUserUseCase>(),
       ));
 
   locator.registerLazySingleton(() => DioClient());
@@ -41,6 +42,7 @@ void initServiceLocator() {
   locator.registerLazySingleton(() => SaveCredentialsUseCase(locator()));
   locator.registerLazySingleton(() => GetCredentialsUseCase(locator()));
   locator.registerLazySingleton(() => DeleteCredentialsUseCase(locator()));
+  locator.registerLazySingleton(() => UpdateUserUseCase(locator()));
 
   // Homepage feature
   locator.registerFactory(() => HomepageCubit(

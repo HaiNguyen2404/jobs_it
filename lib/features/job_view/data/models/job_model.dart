@@ -4,7 +4,6 @@ class JobModel extends Job {
   JobModel({
     required super.id,
     required super.name,
-    required super.companyId,
     required super.type,
     required super.position,
     required super.deadline,
@@ -23,7 +22,6 @@ class JobModel extends Job {
     return JobModel(
       id: int.parse(json['id']),
       name: json['name'] as String,
-      companyId: int.parse(json['companyId']),
       type: json['type'] as String,
       position: json['position'] as String,
       deadline: remainingDays,
@@ -38,7 +36,6 @@ class JobModel extends Job {
     return JobModel(
       id: entity.id,
       name: entity.name,
-      companyId: entity.companyId,
       type: entity.type,
       position: entity.position,
       deadline: entity.deadline,
