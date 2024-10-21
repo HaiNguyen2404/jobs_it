@@ -5,5 +5,6 @@ class ApiUrls {
   static const authMe =
       'https://665086abec9b4a4a603267eb.mockapi.io/jobsit/user/1';
 
-  static const mockURL = '';
+  static const mockURL =
+      'https://665086abec9b4a4a603267eb.mockapi.io/jobsit/job';
 }

@@ -307,7 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: double.maxFinite,
                         child: _buildInfoRow(
                           icon: Icons.calendar_month_outlined,
-                          content: "24/05/2003",
+                          content: state.user.birthday ?? 'Unset',
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -412,7 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 4),
                 Padding(
-                  padding: EdgeInsets.only(left: 4),
+                  padding: const EdgeInsets.only(left: 4),
                   child: Text(
                     state.user.jobWanted!,
                     style: AppStyles.bodyMedium14,

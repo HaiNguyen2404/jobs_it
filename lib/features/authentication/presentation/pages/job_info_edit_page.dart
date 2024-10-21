@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobs_it/app/theme/app_colors.dart';
 import 'package:jobs_it/app/widgets/custom_dropdown.dart';
 import 'package:jobs_it/features/job_view/domain/entities/default_filter.dart';
-
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/widgets/custom_button.dart';
 import '../../../../app/widgets/custom_text_form_field.dart';
