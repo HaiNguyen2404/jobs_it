@@ -56,4 +56,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> updateUser(User user) async {
     await apiService.updateUser(UserModel.fromEntity(user));
   }
+
+  @override
+  Future<void> forgetPassword(String email) async {
+    await apiService.forgetPassword(email);
+  }
+
+  @override
+  Future<void> changePassword(String password, String newPassword) async {
+    await apiService.changePassword(password, newPassword);
+  }
 }

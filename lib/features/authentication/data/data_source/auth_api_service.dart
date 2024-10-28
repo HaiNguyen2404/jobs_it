@@ -13,6 +13,8 @@ abstract class AuthApiService {
   Future<Either> signIn(SignInRequest request);
   Future<UserModel?> getUser();
   Future<void> updateUser(UserModel user);
+  Future<void> forgetPassword(String email);
+  Future<void> changePassword(String password, String newPassword);
 }
 
 class AuthApiServiceImpl implements AuthApiService {
@@ -72,6 +74,31 @@ class AuthApiServiceImpl implements AuthApiService {
     await locator<DioClient>().patch(
       ApiUrls.authMe,
       data: user.toJson(),
+    );
+  }
+
+  @override
+  Future<void> forgetPassword(String email) async {
+    await locator<DioClient>().post(
+      ApiUrls.authMe,
+      data: email,
+    );
+  }
+
+  @override
+  Future<void> changePassword(String password, String newPassword) async {
+    UserModel? currentUser = await getUser();
+    if (currentUser == null) {
+      return;
+    }
+
+    await locator<DioClient>().post(
+      ApiUrls.authMe,
+      data: {
+        'email': currentUser.email,
+        'password': password,
+        'newPassword': newPassword,
+      },
     );
   }
 }

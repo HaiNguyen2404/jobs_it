@@ -49,3 +49,25 @@ class UpdateUserUseCase implements Usecase<void, User> {
     await authRepository.updateUser(param!);
   }
 }
+
+class ForgetPasswordUseCase implements Usecase<void, String> {
+  final AuthRepository authRepository;
+
+  ForgetPasswordUseCase(this.authRepository);
+
+  @override
+  Future<void> call({String? param}) async {
+    await authRepository.forgetPassword(param!);
+  }
+}
+
+class ChangePasswordUseCase implements Usecase<void, (String, String)> {
+  final AuthRepository authRepository;
+
+  ChangePasswordUseCase(this.authRepository);
+
+  @override
+  Future<void> call({(String, String)? param}) async {
+    await authRepository.changePassword(param!.$1, param.$2);
+  }
+}
